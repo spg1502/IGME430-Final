@@ -1,6 +1,7 @@
 //TODO:
 //	Set up router for all the relevant pages
 //	Create middleware folder and implement middleware
+//	Set up account creation and login, access the icon matching app to start
 
 //import libraries
 var path = require('path');
