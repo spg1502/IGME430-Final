@@ -4,6 +4,8 @@
   "description": "My final project for IGME 430",
   "main": "./src/app.js",
   "scripts": {
+	"start": "node ./src/app.js",
+	"pretest": "jshint ./src",
     "test": "echo \"Tests complete\""
   },
   "repository": {
