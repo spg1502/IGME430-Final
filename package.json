@@ -4,8 +4,8 @@
   "description": "My final project for IGME 430",
   "main": "./src/app.js",
   "scripts": {
-	"start": "node ./src/app.js",
-	"pretest": "jshint ./src",
+    "start": "node ./src/app.js",
+    "pretest": "jshint ./src",
     "test": "echo \"Tests complete\""
   },
   "repository": {
@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/spg1502/IGME430-Final/issues"
   },
-  "homepage": "https://github.com/spg1502/IGME430-Final#readme"
+  "homepage": "https://github.com/spg1502/IGME430-Final#readme",
+  "devDependencies": {
+    "jshint": "^2.8.0"
+  }
 }
