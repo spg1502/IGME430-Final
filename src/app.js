@@ -2,6 +2,8 @@
 //	Set up router for all the relevant pages
 //	Create middleware folder and implement middleware
 //	Set up account creation and login, access the icon matching app to start
+//	Add to Account model, give each user object the data they need, teams, icons, etc.
+//	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
 
 //import libraries
 var path = require('path');

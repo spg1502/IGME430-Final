@@ -3,7 +3,7 @@ var controllers = require('./controllers');
 
 var router = function(app)
 {
-	
+	app.get("/", controllers.Account.loginPage);
 };
 
 module.exports = router;
