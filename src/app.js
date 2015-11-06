@@ -5,6 +5,21 @@
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 //	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
 
+//Add socket.io stuff in here - var io = socketio(app);
+//Add socket event listeners for EVERY possible server communication
+/*
+io.sockets.on('connection', function(socket) {
+	//All the functions defind above that we want to attach to event handlers
+	onJoined(socket);
+	onMsg(socket);
+});
+*/
+//	For each of these event listeners have them go make a call to router (since we already have access to it here)
+
+//Router will then have get/posts for each one of the actions the server can take with websockets stuff and will call functions in a DIFFERENT app controller
+
+//Create an app controller that has the iconClicked, iconPartnerRequest functions, and rather than have them implemented as anonymous functions, make them their own functions that the app controller can use 
+
 //import libraries
 var path = require('path');
 var express = require('express');

@@ -34,6 +34,7 @@ var login = function(req, res)
 		req.session.account = account.toAPI();
 		console.log("Successful login for user " + req.body.username);
 		//res.json({redirect: '/maker'});
+		//Here's where we should start up the websockets too
 	});
 };
 
