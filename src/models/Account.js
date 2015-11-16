@@ -91,6 +91,10 @@ AccountSchema.statics.authenticate = function(username, password, callback) {
 	});
 };
 
+AccountSchema.statics.accountDestroy = function(accountUsername, callback) {
+	AccountModel.find({username: accountUsername}).remove().exec();
+};
+
 AccountModel = mongoose.model('Account', AccountSchema);
 
 

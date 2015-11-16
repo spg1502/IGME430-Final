@@ -9,6 +9,7 @@
 //	Add clientApp to Account controller in place of maker.js
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
+//	AccountDestroy - find a way to have the uer's account name in Account.js controller to pass into the account model destroy function
 
 //Add socket.io stuff in here - var io = socketio(app);
 //Add socket event listeners for EVERY possible server communication

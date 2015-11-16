@@ -19,6 +19,14 @@ var logout = function(req, res)
 	res.redirect('/');
 };
 
+var accountDestroy = function(req, res)
+{
+	console.log("Successful account destroy for user " + req.body.username);
+	Account.AccountModel.accountDestroy(req.body.username);
+	req.session.destroy();
+	res.redirect('/');
+};
+
 var login = function(req, res)
 {
 	if(!req.body.username || !req.body.pass)
@@ -81,3 +89,4 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signupPage = signupPage;
 module.exports.signup = signup;
+module.exports.accountDestroy = accountDestroy;
