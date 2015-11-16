@@ -16,6 +16,8 @@ $(document).ready(function() {
             dataType: "json",
             success: function(result, status, xhr) {
                 console.log("Successful Ajax sent");
+				
+				window.location = result.redirect;
             },
             error: function(xhr, status, error) {
                 var messageObj = JSON.parse(xhr.responseText);
@@ -40,6 +42,19 @@ $(document).ready(function() {
 
         sendAjax($("#signupForm").attr("action"), $("#signupForm").serialize());
         
+        return false;
+    });
+
+    $("#loginSubmit").on("click", function(e) {
+        e.preventDefault();
+    
+        if($("#user").val() == '' || $("#pass").val() == '') {
+            handleError("Username or password is empty");
+            return false;
+        }
+    
+        sendAjax($("#loginForm").attr("action"), $("#loginForm").serialize());
+
         return false;
     });
 });

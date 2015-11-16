@@ -3,11 +3,14 @@ var controllers = require('./controllers');
 
 var router = function(app)
 {
-	app.get("/login", controllers.Account.loginPage);
-	app.post("/login", controllers.Account.login);
-	app.get("/signup", controllers.Account.signupPage);
-	app.post("/signup", controllers.Account.signup);
-	app.get("/", controllers.Account.loginPage);
+	app.get("/login", 			controllers.Account.loginPage);
+	app.post("/login", 			controllers.Account.login);
+	app.get("/signup", 			controllers.Account.signupPage);
+	app.post("/signup", 		controllers.Account.signup);
+	app.get("/logout",			controllers.Account.logout);
+	app.get("/clientApp",		controllers.ClientApp.clientAppPage);
+	//app.post("/clientApp",		controllers.ClientApp.handlePosts);
+	app.get("/", 				controllers.Account.loginPage);
 };
 
 module.exports = router;

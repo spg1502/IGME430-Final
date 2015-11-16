@@ -14,6 +14,7 @@ var signupPage = function(req, res)
 
 var logout = function(req, res)
 {
+	console.log("Successful logout for user " + req.body.username);
 	req.session.destroy();
 	res.redirect('/');
 };
@@ -33,7 +34,7 @@ var login = function(req, res)
 		}
 		req.session.account = account.toAPI();
 		console.log("Successful login for user " + req.body.username);
-		//res.json({redirect: '/maker'});
+		res.json({redirect: '/clientApp'});
 		//Here's where we should start up the websockets too
 	});
 };
@@ -70,7 +71,7 @@ var signup = function(req, res)
 			}
 			req.session.account = newAccount.toAPI();
 			console.log("Successful signup for user " + accountData.username);
-			//res.json({redirect: '/maker'});
+			res.json({redirect: '/clientApp'});
 		});
 	});
 };

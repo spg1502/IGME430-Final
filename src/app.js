@@ -1,9 +1,14 @@
 //TODO:
 //	Set up router for all the relevant pages
 //	Create middleware folder and implement middleware
-//	Set up account creation and login, access the icon matching app to start
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 //	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
+//	Create a #errorMessage span on each page that will contain the error text for displaying to the user
+//	Use "clientApp.js" instead of "maker.js"
+//	Events for client interaction go in clientApp.js
+//	Add clientApp to Account controller in place of maker.js
+//	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
+// 	Add ClientAppModel that will have a findByOwner function
 
 //Add socket.io stuff in here - var io = socketio(app);
 //Add socket event listeners for EVERY possible server communication

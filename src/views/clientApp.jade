@@ -1,0 +1,13 @@
+extends ./base.jade
+block append style
+    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+block body
+  nav
+    a(href="/login")
+    .navlink
+      a(href="/logout") Log out
+    section#messageSection
+      div.messageDiv
+        h3.messageText Hello, this is the message box
+block scripts
+        script(src="/assets/clientApp.js")
