@@ -97,6 +97,12 @@ var onJoined = function(socket)
 	});
 };
 
+io.sockets.on('connection', function(socket) {
+	//All the functions defind above that we want to attach to event handlers
+	onJoined(socket);
+	onMsg(socket);
+});
+
 app.use('/assets', express.static(path.resolve(__dirname+'../../client/')));
 app.use(compression());
 app.use(bodyParser.urlencoded(
@@ -140,12 +146,6 @@ app.use(function (err, req, res, next)
 });
 
 router(app);
-
-io.sockets.on('connection', function(socket) {
-	//All the functions defind above that we want to attach to event handlers
-	onJoined(socket);
-	onMsg(socket);
-});
 
 app.listen(port, function(err)
 {

@@ -35,23 +35,52 @@ $(document).ready(function() {
         });        
     }
 	
-	canvas = document.querySelector("#mainCanvas");
-	ctx = canvas.getContext("2d");
-	canvas.addEventListener('click', onClick);
-	findNewPartnerButton = document.querySelector("#findNew");
-	findNewPartnerButton.addEventListener('click', newPartnerRequest);
-	
-	socket = io.connect();
-	socket.on('connect', function()
+	function init()
 	{
-		socket.emit('iconJoin', {username:clientUsername});
-	});
-	
-	socket.on('iconNewUser', function(data)
-	{
-		clientUsername = data.username;
-		console.log("The server has given this client the username of " + clientUsername);
-	});
+		console.log("init");
+		canvas = document.querySelector("#mainCanvas");
+		ctx = canvas.getContext("2d");
+		canvas.addEventListener('click', onClick);
+		findNewPartnerButton = document.querySelector("#findNew");
+		findNewPartnerButton.addEventListener('click', newPartnerRequest);
+		
+		socket = io.connect();
+		socket.on('connect', function()
+		{
+			socket.emit('iconJoin', {username:clientUsername});
+		});
+		
+		socket.on('iconNewUser', function(data)
+		{
+			clientUsername = data.username;
+			console.log("The server has given this client the username of " + clientUsername);
+		});
+	}
 	//Make events here for all the interactive buttons on the client's app
 	//Also add all the socket.on events here to respond to all the client/server communications
+	
+		
+	function onClick (e)
+	{
+		var currentTime = new Date().getTime();
+		socket.emit('iconClicked', {username:clientUsername, iconPartner:iconPartnerUsername, clickTime:currentTime});
+	}
+	
+	function newPartnerRequest (e)
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.font = "30px Arial";
+		ctx.fillText("Waiting for Partner", 5, 150);
+		
+		socket.emit('iconPartnerRequest', {username:clientUsername});
+	}
+	
+	function draw(e)
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.globalCompositeOperation = "source-over";
+		ctx.drawImage(e, 50, 50, 100, 150);
+	}
+	
+	window.onload = init;
 });
