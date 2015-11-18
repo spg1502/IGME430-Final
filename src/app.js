@@ -10,6 +10,8 @@
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
 //	AccountDestroy - find a way to have the uer's account name in Account.js controller to pass into the account model destroy function
+//  When the user connects to the app, set their username in the websockets application. Dont get them from the server.
+//  Put client functions in clientApp.js and server functions in this file below in the "websockets stuff" section
 
 //Add socket.io stuff in here - var io = socketio(app);
 //Add socket event listeners for EVERY possible server communication
@@ -73,8 +75,28 @@ var router = require('./router.js');
 var port = process.env.PORT || process.env.NODE_PORT || 3050;
 
 var app = express();
+
+//Websockets stuff
 server.Server(app);
 var io = socketio(server);
+var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
+var sockets = [];
+var onJoined = function(socket)
+{
+	socket.on('iconJoin', function(data)
+	{
+		console.log(data.username + " has joined");
+		
+		socket.iconUsername = Math.floor(Math.random() * 10000);	//Get their actual usernames here
+		
+		sockets[socket.iconUsername] = socket;
+		
+		socket.join('iconRoom1');	//Put our new user into the appropriate room
+		
+		socket.emit('iconNewUser', {username:socket.iconUsername});	//Send them back their generated name
+	});
+};
+
 app.use('/assets', express.static(path.resolve(__dirname+'../../client/')));
 app.use(compression());
 app.use(bodyParser.urlencoded(
