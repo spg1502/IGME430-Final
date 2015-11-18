@@ -28,4 +28,5 @@ $(document).ready(function() {
     }
 	
 	//Make events here for all the interactive buttons on the client's app
+	//Also add all the socket.on events here to respond to all the client/server communications
 });

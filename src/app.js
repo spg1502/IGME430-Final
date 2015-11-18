@@ -20,6 +20,8 @@ io.sockets.on('connection', function(socket) {
 	onMsg(socket);
 });
 */
+
+// add <script src="/socket.io/socket.io.js"></script> to all the jade template files
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
 //Router will then have get/posts for each one of the actions the server can take with websockets stuff and will call functions in a DIFFERENT app controller
@@ -38,6 +40,8 @@ var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var url = require('url');
 var csrf = require('csurf');
+var socketio = require('socket.io');
+var server = require('http');
 
 var dbURL = process.env.MONGOLAB_URI || "mongodb://localhost/FinalProject";
 
@@ -69,6 +73,8 @@ var router = require('./router.js');
 var port = process.env.PORT || process.env.NODE_PORT || 3050;
 
 var app = express();
+server.Server(app);
+var io = socketio(server);
 app.use('/assets', express.static(path.resolve(__dirname+'../../client/')));
 app.use(compression());
 app.use(bodyParser.urlencoded(
@@ -112,6 +118,12 @@ app.use(function (err, req, res, next)
 });
 
 router(app);
+
+io.sockets.on('connection', function(socket) {
+	//All the functions defind above that we want to attach to event handlers
+	onJoined(socket);
+	onMsg(socket);
+});
 
 app.listen(port, function(err)
 {

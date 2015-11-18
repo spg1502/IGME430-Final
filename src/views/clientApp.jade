@@ -10,5 +10,9 @@ block body
     section#messageSection
       div.messageDiv
         h3.messageText Hello, this is the message box
+    canvas#mainCanvas(style={width: 500, height: 300})
+      Your browser doesn't support canvas applications
+    button(id="findNew") Find a new partner
 block scripts
+        script(src="/socket.io/socket.io.js")
         script(src="/assets/clientApp.js")
