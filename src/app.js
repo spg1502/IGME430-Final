@@ -1,29 +1,17 @@
 //TODO:
 //	Set up router for all the relevant pages
-//	Create middleware folder and implement middleware
+//--Create middleware folder and implement middleware
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 //	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
 //	Create a #errorMessage span on each page that will contain the error text for displaying to the user
-//	Use "clientApp.js" instead of "maker.js"
-//	Events for client interaction go in clientApp.js
-//	Add clientApp to Account controller in place of maker.js
+//--Use "clientApp.js" instead of "maker.js"
+//--Add clientApp to Account controller in place of maker.js
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
 //	AccountDestroy - find a way to have the uer's account name in Account.js controller to pass into the account model destroy function
 //  When the user connects to the app, set their username in the websockets application. Dont get them from the server.
 //  Put client functions in clientApp.js and server functions in this file below in the "websockets stuff" section
 
-//Add socket.io stuff in here - var io = socketio(app);
-//Add socket event listeners for EVERY possible server communication
-/*
-io.sockets.on('connection', function(socket) {
-	//All the functions defind above that we want to attach to event handlers
-	onJoined(socket);
-	onMsg(socket);
-});
-*/
-
-// add <script src="/socket.io/socket.io.js"></script> to all the jade template files
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
 //Router will then have get/posts for each one of the actions the server can take with websockets stuff and will call functions in a DIFFERENT app controller
