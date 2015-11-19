@@ -42,8 +42,10 @@ var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var url = require('url');
 var csrf = require('csurf');
+var app = express();
 var socketio = require('socket.io');
-var server = require('http');
+
+
 
 var dbURL = process.env.MONGOLAB_URI || "mongodb://localhost/FinalProject";
 
@@ -73,35 +75,6 @@ if(process.env.REDISCLOUD_URL)
 //pull in our routes
 var router = require('./router.js');
 var port = process.env.PORT || process.env.NODE_PORT || 3050;
-
-var app = express();
-
-//Websockets stuff
-server.Server(app);
-var io = socketio(server);
-var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
-var sockets = [];
-var onJoined = function(socket)
-{
-	socket.on('iconJoin', function(data)
-	{
-		console.log(data.username + " has joined");
-		
-		socket.iconUsername = Math.floor(Math.random() * 10000);	//Get their actual usernames here
-		
-		sockets[socket.iconUsername] = socket;
-		
-		socket.join('iconRoom1');	//Put our new user into the appropriate room
-		
-		socket.emit('iconNewUser', {username:socket.iconUsername});	//Send them back their generated name
-	});
-};
-
-io.sockets.on('connection', function(socket) {
-	//All the functions defind above that we want to attach to event handlers
-	onJoined(socket);
-	onMsg(socket);
-});
 
 app.use('/assets', express.static(path.resolve(__dirname+'../../client/')));
 app.use(compression());
@@ -147,11 +120,37 @@ app.use(function (err, req, res, next)
 
 router(app);
 
-app.listen(port, function(err)
+var server = app.listen(port, function(err)
 {
 	if(err)
 	{
 		throw err;
 	}
 	console.log('Listening on port ' + port);
+});
+
+var io = socketio.listen(server);
+
+var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
+var sockets = [];
+var onJoined = function(socket)
+{
+	socket.on('iconJoin', function(data)
+	{
+		console.log(data.username + " has joined");
+		
+		socket.iconUsername = Math.floor(Math.random() * 10000);	//Get their actual usernames here
+		
+		sockets[socket.iconUsername] = socket;
+		
+		socket.join('iconRoom1');	//Put our new user into the appropriate room
+		
+		socket.emit('iconNewUser', {username:socket.iconUsername});	//Send them back their generated name
+	});
+};
+
+io.sockets.on('connection', function(socket) {
+	//All the functions defind above that we want to attach to event handlers
+	onJoined(socket);
+	//onMsg(socket);
 });
