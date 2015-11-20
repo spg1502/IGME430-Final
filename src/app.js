@@ -149,12 +149,12 @@ var onMsg = function(socket)
 		{
 			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
 			{
-				console.log(user.name + " is unpaired");
+				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name);
 				user.paired = true;
 				newUser.paired = true;
 				//Actually put REAL images into the icon variable here
 				socket.emit('iconPaired', {iconPartner:user.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
-				sockets[user.name].emit('iconPaired', {iconParnter:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+				sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
 			}
 		});
 		iconUsers[newUser.name] = newUser;
@@ -162,16 +162,19 @@ var onMsg = function(socket)
 	
 	socket.on('iconClicked', function(data)
 	{
-		console.log(data.username + " clicked their icon at " + data.currentTime);
-		console.log(data.username + "'s parner is " + data.iconPartner + " and they last clicked their icon at " + iconUsers[data.iconPartner].lastClicked);
+		console.log(data.username + " clicked their icon at " + data.clickTime);
+		iconUsers[data.username].lastClicked = data.clickTime;
+		console.log(data.iconPartner);
+		//console.log(data.username + "'s parner is " + data.iconPartner + " and they last clicked their icon at " + iconUsers[data.iconPartner].lastClicked);
 		console.log("The separation time between the click of " + data.username + " and " + data.iconPartner + " is " + Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked));
-		iconUsers[data.username].lastClicked = data.currentTime;
-		if( Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked) < 5 )
+		if( Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked) < 5000 )
 		{
-			console.log("click time between " + data.username + " and " + data.iconPartner + " is < 5");
+			console.log("click time between " + data.username + " and " + data.iconPartner + " is < 5000");
 			//Return the shared icon to the pool of icons
+			//Set the paired value of data.username to false
 			//Emit iconPartnerFound
-			//Set the paired value of data.username to false, and try to pair both up with unpaired people
+			socket.emit('iconPartnerFound');
+			sockets[data.iconPartner].emit('iconPartnerFound');
 		}
 	});
 };
