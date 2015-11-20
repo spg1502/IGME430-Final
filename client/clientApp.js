@@ -55,6 +55,27 @@ $(document).ready(function() {
 			clientUsername = data.username;
 			console.log("The server has given this client the username of " + clientUsername);
 		});
+		
+		socket.on('iconPaired', function(data)
+		{
+			iconPartnerUsername = data.iconPartner;
+			console.log(data.icon);
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillText(data.icon, 5, 150);
+			//When actual images are passed in, delete the console.log line, and uncomment the lines of code below
+			/*icon = data.icon;
+			icon.onLoad = function()
+			{
+				draw(icon);
+			}*/
+		});
+		
+		socket.on('iconPartnerFound', function()
+		{
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.font = "30px Arial";
+			ctx.fillText("Hit the button for a new partner", 5, 5);
+		});
 	}
 	//Make events here for all the interactive buttons on the client's app
 	//Also add all the socket.on events here to respond to all the client/server communications
@@ -62,8 +83,11 @@ $(document).ready(function() {
 		
 	function onClick (e)
 	{
-		var currentTime = new Date().getTime();
-		socket.emit('iconClicked', {username:clientUsername, iconPartner:iconPartnerUsername, clickTime:currentTime});
+		if(iconPartnerUsername != "")
+		{
+			var currentTime = new Date().getTime();
+			socket.emit('iconClicked', {username:clientUsername, iconPartner:iconPartnerUsername, clickTime:currentTime});
+		}
 	}
 	
 	function newPartnerRequest (e)

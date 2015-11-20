@@ -137,8 +137,67 @@ var onJoined = function(socket)
 	});
 };
 
+var onMsg = function(socket)
+{
+	socket.on('iconPartnerRequest', function(data)
+	{
+		console.log(data.username + " wants a new partner.");
+		var defaultTime = new Date('December 17, 1995 03:24:00');
+		var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
+		delete iconUsers[newUser.name];//if the user already exists, delete the old object
+		iconUsers.forEach( function(user)
+		{
+			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+			{
+				console.log(user.name + " is unpaired");
+				user.paired = true;
+				newUser.paired = true;
+				//Actually put REAL images into the icon variable here
+				socket.emit('iconPaired', {iconPartner:user.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+				sockets[user.name].emit('iconPaired', {iconParnter:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+			}
+		});
+		iconUsers[newUser.name] = newUser;
+	});
+	
+	socket.on('iconClicked', function(data)
+	{
+		console.log(data.username + " clicked their icon at " + data.currentTime);
+		console.log(data.username + "'s parner is " + data.iconPartner + " and they last clicked their icon at " + iconUsers[data.iconPartner].lastClicked);
+		console.log("The separation time between the click of " + data.username + " and " + data.iconPartner + " is " + Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked));
+		iconUsers[data.username].lastClicked = data.currentTime;
+		if( Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked) < 5 )
+		{
+			console.log("click time between " + data.username + " and " + data.iconPartner + " is < 5");
+			//Return the shared icon to the pool of icons
+			//Emit iconPartnerFound
+			//Set the paired value of data.username to false, and try to pair both up with unpaired people
+		}
+	});
+};
+
+var findPartner = function(data)
+{
+	console.log(data.username + " wants a new partner.");
+	var defaultTime = new Date('December 17, 1995 03:24:00');
+	var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
+	delete iconUsers[newUser.name];//if the user already exists, delete the old object
+	iconUsers.forEach( function(user)
+	{
+		if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+		{
+			console.log(user.name + " is unpaired");
+			user.paired = true;
+			newUser.paired = true;
+			//Actually put REAL images into the icon variable here
+			socket.emit('iconPaired', {iconPartner:user.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+			sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+		}
+	});
+};
+
 io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
 	onJoined(socket);
-	//onMsg(socket);
+	onMsg(socket);
 });
