@@ -1,6 +1,7 @@
 extends ./base.jade
 block append style
-    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+    link(rel="stylesheet", media="screen and (max-width: 700px)", type="text/css", href="/assets/narrow.css")
+    link(rel="stylesheet", media="screen and (min-width: 701px)", type="text/css", href="/assets/wide.css")
 block body
   nav
     a(href="/login")
@@ -12,10 +13,13 @@ block body
     form#signupForm(class="mainForm", name="signupForm", action"/signup", method="POST")
       label(for="username") Username: 
       input#user(type="text", name="username", placeholder="username")
+      br
       label(for="pass") Password: 
       input#pass(type="password", name="pass", placeholder="password")
+      br
       label(for="pass2") Password: 
       input#pass2(type="password", name="pass2", placeholder="retype password")
+      br
       input(type="hidden", name="_csrf", value="#{csrfToken}")
       a#signupSubmit(class="formSubmit", href="#") Sign up
 block scripts

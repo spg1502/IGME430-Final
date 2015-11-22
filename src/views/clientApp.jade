@@ -1,6 +1,7 @@
 extends ./base.jade
 block append style
-    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+    link(rel="stylesheet", media="screen and (max-width: 700px)", type="text/css", href="/assets/narrow.css")
+    link(rel="stylesheet", media="screen and (min-width: 701px)", type="text/css", href="/assets/wide.css")
 block body
   nav
     a(href="/login")
@@ -10,9 +11,10 @@ block body
     section#messageSection
       div.messageDiv
         h3.messageText Hello, this is the message box
-    canvas#mainCanvas(style={width: 500, height: 300})
-      Your browser doesn't support canvas applications
-    button(id="findNew") Find a new partner
+    section#iconCanvas
+      canvas#mainCanvas(style={width: 500, height: 300})
+        Your browser doesn't support canvas applications
+      button(id="findNew") Find a new partner
 block scripts
         script(src="/socket.io/socket.io.js")
         script(src="/assets/clientApp.js")
