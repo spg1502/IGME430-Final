@@ -41,7 +41,7 @@ var login = function(req, res)
 			return res.status(401).json({error: "Wrong username or password"});
 		}
 		req.session.account = account.toAPI();
-		console.log("Successful login for user " + req.body.username);
+		console.log("Successful login for: " + req.body.username);
 		res.json({redirect: '/clientApp'});
 		//Here's where we should start up the websockets too
 	});
@@ -78,7 +78,7 @@ var signup = function(req, res)
 				return res.status(400).json({error:"An error occured"});
 			}
 			req.session.account = newAccount.toAPI();
-			console.log("Successful signup for user " + accountData.username);
+			console.log("Successful signup for: " + accountData.username);
 			res.json({redirect: '/clientApp'});
 		});
 	});

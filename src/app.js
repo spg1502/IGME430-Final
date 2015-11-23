@@ -34,6 +34,8 @@ var url = require('url');
 var csrf = require('csurf');
 var app = express();
 var socketio = require('socket.io');
+//var sharedSession = require('express-socket.io-session');
+var expressSessionShare = require ('socket.io-express-session');
 
 
 
@@ -72,15 +74,15 @@ app.use(bodyParser.urlencoded(
 {
 	extended: true
 }));
-app.use(session(
-{
-	key: "sessionid",
-	store: new RedisStore(
-	{
+var redisSessionStore = new RedisStore({
 		host: redisURL.hostname,
 		port: redisURL.port,
 		pass: redisPASS
-	}),
+});
+app.use(session(
+{
+	key: "sessionid",
+	store: redisSessionStore,
 	secret: "Burrito Emoji",
 	resave: true,
 	saveUninitialized: true,
@@ -120,7 +122,7 @@ var server = app.listen(port, function(err)
 });
 
 var io = socketio.listen(server);
-
+io.use(expressSessionShare(session));
 var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
 var sockets = [];
 var onJoined = function(socket)
@@ -203,6 +205,7 @@ var findPartner = function(data)
 
 io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
+	console.dir(socket.handshake.session);
 	onJoined(socket);
 	onMsg(socket);
 });
