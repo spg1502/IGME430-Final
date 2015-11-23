@@ -1,5 +1,4 @@
 //TODO:
-//	Set up router for all the relevant pages
 //--Create middleware folder and implement middleware
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 //	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
@@ -9,8 +8,11 @@
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
 //	AccountDestroy - find a way to have the uer's account name in Account.js controller to pass into the account model destroy function
-//  When the user connects to the app, set their username in the websockets application. Dont get them from the server.
+//  Adjust spacing of navbar links on client app page
+//  Do CSS for the "narrow" window state
+//  Use the user's username instead of new, or the server-assigned number identifier
 //  Put client functions in clientApp.js and server functions in this file below in the "websockets stuff" section
+//  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
