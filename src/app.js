@@ -35,10 +35,6 @@ var url = require('url');
 var csrf = require('csurf');
 var app = express();
 var socketio = require('socket.io');
-var expressSessionShare = require('express-socket.io-session');
-//var expressSessionShare = require ('socket.io-express-session');
-
-
 
 var dbURL = process.env.MONGOLAB_URI || "mongodb://localhost/FinalProject";
 
