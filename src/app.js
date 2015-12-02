@@ -13,6 +13,7 @@
 //  Put client functions in clientApp.js and server functions in this file below in the "websockets stuff" section
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
+//	Logout doesn't take the username, make sure the console log when a user logs out prints the username
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
