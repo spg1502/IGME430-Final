@@ -11,9 +11,9 @@ block body
   section#messageSection
     div.messageDiv
       h3.messageText Hello, this is the message box
-      h3 #{username}
+      input(type="hidden", id="loginName", value="#{username}")
   section#iconCanvas
-    canvas#mainCanvas()
+    canvas#mainCanvas(width="686px", height="500px")
       Your browser doesn't support canvas applications
     button(id="findNew") Find a new partner
 block scripts

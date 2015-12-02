@@ -7,12 +7,12 @@
 //--Add clientApp to Account controller in place of maker.js
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
-//	AccountDestroy - find a way to have the uer's account name in Account.js controller to pass into the account model destroy function
+//	AccountDestroy - find a way to have the user's account name in Account.js controller to pass into the account model destroy function
 //  Adjust spacing of navbar links on client app page
 //  Do CSS for the "narrow" window state
-//  Use the user's username instead of new, or the server-assigned number identifier
 //  Put client functions in clientApp.js and server functions in this file below in the "websockets stuff" section
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
+//	When a user disconnects, destroy their socket and iconUser entries
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
@@ -122,7 +122,6 @@ var server = app.listen(port, function(err)
 });
 
 var io = socketio.listen(server);
-io.use(expressSessionShare(session, {autoSave:true}));
 var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
 var sockets = [];
 var onJoined = function(socket)
@@ -131,7 +130,7 @@ var onJoined = function(socket)
 	{
 		console.log(data.username + " has joined");
 		
-		socket.iconUsername = Math.floor(Math.random() * 10000);	//Get their actual usernames here
+		socket.iconUsername = data.username;	//Get their actual usernames here
 		
 		sockets[socket.iconUsername] = socket;
 		
@@ -168,14 +167,15 @@ var onMsg = function(socket)
 	{
 		console.log(data.username + " clicked their icon at " + data.clickTime);
 		iconUsers[data.username].lastClicked = data.clickTime;
-		console.log(data.iconPartner);
-		//console.log(data.username + "'s parner is " + data.iconPartner + " and they last clicked their icon at " + iconUsers[data.iconPartner].lastClicked);
 		console.log("The separation time between the click of " + data.username + " and " + data.iconPartner + " is " + Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked));
 		if( Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked) < 5000 )
 		{
 			console.log("click time between " + data.username + " and " + data.iconPartner + " is < 5000");
+			iconUsers[data.username].paired = false;
+			socket.emit('setIconPartnerUsername', {newIconPartnerUsername:""});
+			iconUsers[data.iconPartner].paired = false;
+			sockets[data.iconPartner].emit('setIconPartnerUsername', {newIconPartnerUsername:""});
 			//Return the shared icon to the pool of icons
-			//Set the paired value of data.username to false
 			//Emit iconPartnerFound
 			socket.emit('iconPartnerFound');
 			sockets[data.iconPartner].emit('iconPartnerFound');
@@ -205,7 +205,6 @@ var findPartner = function(data)
 
 io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
-	console.dir(socket.handshake.session);
 	onJoined(socket);
 	onMsg(socket);
 });

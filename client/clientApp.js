@@ -40,9 +40,12 @@ $(document).ready(function() {
 		console.log("init");
 		canvas = document.querySelector("#mainCanvas");
 		ctx = canvas.getContext("2d");
+		ctx.font = "10px Arial";
 		canvas.addEventListener('click', onClick);
 		findNewPartnerButton = document.querySelector("#findNew");
 		findNewPartnerButton.addEventListener('click', newPartnerRequest);
+		clientUsername = document.querySelector("#loginName").value;
+		console.log(clientUsername);
 		
 		socket = io.connect();
 		socket.on('connect', function()
@@ -52,6 +55,10 @@ $(document).ready(function() {
 		
 		socket.on('iconNewUser', function(data)
 		{
+			if(clientUsername !== data.username)
+			{
+				console.log("Error, local username does not match server username");
+			}
 			clientUsername = data.username;
 			console.log("The server has given this client the username of " + clientUsername);
 		});
@@ -60,8 +67,7 @@ $(document).ready(function() {
 		{
 			iconPartnerUsername = data.iconPartner;
 			console.log(data.icon);
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.fillText(data.icon, 5, 150);
+			canvasWriteText(data.icon);
 			//When actual images are passed in, delete the console.log line, and uncomment the lines of code below
 			/*icon = data.icon;
 			icon.onLoad = function()
@@ -72,9 +78,13 @@ $(document).ready(function() {
 		
 		socket.on('iconPartnerFound', function()
 		{
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.font = "30px Arial";
-			ctx.fillText("Hit the button for a new partner", 5, 5);
+			canvasWriteText("Hit the button for a new partner");
+		});
+		
+		socket.on('setIconPartnerUsername', function(data)
+		{
+			console.log("setting icon partner username to \"" + data.newIconPartnerUsername + "\" .");
+			iconPartnerUsername = data.newIconPartnerUsername;
 		});
 	}
 	//Make events here for all the interactive buttons on the client's app
@@ -92,9 +102,7 @@ $(document).ready(function() {
 	
 	function newPartnerRequest (e)
 	{
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.font = "30px Arial";
-		ctx.fillText("Waiting for Partner", 5, 150);
+		canvasWriteText("Waiting for Partner");
 		
 		socket.emit('iconPartnerRequest', {username:clientUsername});
 	}
@@ -104,6 +112,12 @@ $(document).ready(function() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.globalCompositeOperation = "source-over";
 		ctx.drawImage(e, 50, 50, 100, 150);
+	}
+	
+	function canvasWriteText(e)
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillText(e, 5, 25);
 	}
 	
 	window.onload = init;
