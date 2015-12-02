@@ -15,7 +15,7 @@ var appPage = function(req, res)
 		}
 		else
 		{
-			res.render('clientApp', {csrfToken: req.csrfToken(), data: docs});
+			res.render('clientApp', {csrfToken: req.csrfToken(), data: docs, username: req.session.account.username});
 		}
 	});
 };

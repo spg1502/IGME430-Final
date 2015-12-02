@@ -34,8 +34,8 @@ var url = require('url');
 var csrf = require('csurf');
 var app = express();
 var socketio = require('socket.io');
-//var sharedSession = require('express-socket.io-session');
-var expressSessionShare = require ('socket.io-express-session');
+var expressSessionShare = require('express-socket.io-session');
+//var expressSessionShare = require ('socket.io-express-session');
 
 
 
@@ -122,7 +122,7 @@ var server = app.listen(port, function(err)
 });
 
 var io = socketio.listen(server);
-io.use(expressSessionShare(session));
+io.use(expressSessionShare(session, {autoSave:true}));
 var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
 var sockets = [];
 var onJoined = function(socket)
