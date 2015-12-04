@@ -119,6 +119,5 @@ $(document).ready(function() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillText(e, 5, 25);
 	}
-	
 	window.onload = init;
 });

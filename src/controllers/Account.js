@@ -14,15 +14,15 @@ var signupPage = function(req, res)
 
 var logout = function(req, res)
 {
-	console.log("Successful logout for user " + req.body.username);
+	console.log("Successful logout for user " + req.session.account.username);
 	req.session.destroy();
 	res.redirect('/');
 };
 
 var accountDestroy = function(req, res)
 {
-	console.log("Successful account destroy for user " + req.body.username);
-	Account.AccountModel.accountDestroy(req.body.username);
+	console.log("Successful account destroy for user " + req.session.account.username);
+	Account.AccountModel.accountDestroy(req.session.account.username);
 	req.session.destroy();
 	res.redirect('/');
 };
@@ -49,7 +49,7 @@ var login = function(req, res)
 
 var signup = function(req, res)
 {
-	if(!req.body.username || !req.body.username || !req.body.pass2)
+	if(!req.body.username || !req.body.pass || !req.body.pass2)
 	{
 		return res.status(400).json({error: "All fields are required"});
 	}
