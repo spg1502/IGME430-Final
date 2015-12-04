@@ -9,7 +9,8 @@
 //  Do CSS for the "narrow" window state
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
-//	Fix the favicon
+//	Make the images draw in a more sensible place
+//	Use smaller images for quicker load times
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
@@ -117,13 +118,19 @@ var server = app.listen(port, function(err)
 var io = socketio.listen(server);
 var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
 var sockets = [];
+var images = [];
+for(i = 0; i < 10; i++)
+{
+	var tempImageData = {index:i, imageUrl:"https://github.com/identicons/" + i.toString() + ".png", paired:false};
+	images.push(tempImageData);
+}
 var onJoined = function(socket)
 {
 	socket.on('iconJoin', function(data)
 	{
 		console.log(data.username + " has joined");
 		
-		socket.iconUsername = data.username;	//Get their actual usernames here
+		socket.iconUsername = data.username;
 		
 		sockets[socket.iconUsername] = socket;
 		
@@ -145,12 +152,12 @@ var onMsg = function(socket)
 		{
 			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
 			{
-				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name);
+				var pairIcon = findUnusedIcon();
+				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name + " using the icon at index " + pairIcon.index);
 				user.paired = true;
 				newUser.paired = true;
-				//Actually put REAL images into the icon variable here
-				socket.emit('iconPaired', {iconPartner:user.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
-				sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+				socket.emit('iconPaired', {iconPartner:user.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
+				sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
 			}
 		});
 		iconUsers[newUser.name] = newUser;
@@ -176,25 +183,17 @@ var onMsg = function(socket)
 	});
 };
 
-var findPartner = function(data)
+var findUnusedIcon = function()
 {
-	console.log(data.username + " wants a new partner.");
-	var defaultTime = new Date('December 17, 1995 03:24:00');
-	var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
-	delete iconUsers[newUser.name];//if the user already exists, delete the old object
-	iconUsers.forEach( function(user)
+	for(i = 0; i < images.length; i++)
 	{
-		if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+		if(images[i].paired == false)
 		{
-			console.log(user.name + " is unpaired");
-			user.paired = true;
-			newUser.paired = true;
-			//Actually put REAL images into the icon variable here
-			socket.emit('iconPaired', {iconPartner:user.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
-			sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:"Icon data - pairing up " + newUser.name + " and " + user.name});
+			images[i].paired = true;
+			return {imageUrl:images[i].imageUrl, index:images[i].index};
 		}
-	});
-};
+	}
+}
 
 io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers

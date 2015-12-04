@@ -5,7 +5,8 @@ var findNewPartnerButton;
 var draws = {};//Will contain objects that look like {image: imageData} to be drawn in the canvas
 var clientUsername = "new"; //Set this to the user's username
 var iconPartnerUsername = "";
-var icon = new Image();
+var iconIndex;
+var icon = new Image;
 var socket;
 
 $(document).ready(function() {
@@ -66,14 +67,11 @@ $(document).ready(function() {
 		socket.on('iconPaired', function(data)
 		{
 			iconPartnerUsername = data.iconPartner;
-			console.log(data.icon);
-			canvasWriteText(data.icon);
-			//When actual images are passed in, delete the console.log line, and uncomment the lines of code below
-			/*icon = data.icon;
-			icon.onLoad = function()
-			{
-				draw(icon);
-			}*/
+			iconIndex = data.iconIndex;
+			icon.src = data.icon;
+			$("#iconDebug").attr("src", icon.src);
+			console.log("Icon - matching this user (" + clientUsername + ") with " + iconPartnerUsername);
+			console.log(icon.src);
 		});
 		
 		socket.on('iconPartnerFound', function()
@@ -111,7 +109,7 @@ $(document).ready(function() {
 	{
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.globalCompositeOperation = "source-over";
-		ctx.drawImage(e, 50, 50, 100, 150);
+		ctx.drawImage(e, 0,0);
 	}
 	
 	function canvasWriteText(e)
