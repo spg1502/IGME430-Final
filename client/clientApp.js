@@ -14,6 +14,7 @@ $(document).ready(function() {
     function handleError(message) {
         $("#errorMessage").text(message);
 		console.log(message);
+		alert(message);
     }
     
     function sendAjax(action, data) {
@@ -84,6 +85,15 @@ $(document).ready(function() {
 			console.log("setting icon partner username to \"" + data.newIconPartnerUsername + "\" .");
 			iconPartnerUsername = data.newIconPartnerUsername;
 		});
+		
+		socket.on('iconPartnerDisconnected', function(data)
+		{
+			iconPartnerUsername = "";
+			iconIndex = -1;
+			console.log(data.message);
+			icon.src = ""
+			$("#iconDebug").attr("src", icon.src);
+		});
 	}
 	//Make events here for all the interactive buttons on the client's app
 	//Also add all the socket.on events here to respond to all the client/server communications
@@ -102,7 +112,18 @@ $(document).ready(function() {
 	{
 		canvasWriteText("Waiting for Partner");
 		
-		socket.emit('iconPartnerRequest', {username:clientUsername});
+		if(iconPartnerUsername != "")
+		{
+			socket.emit('iconPartnerRequestNew', {username:clientUsername, iconPartner: iconPartnerUsername});
+			iconPartnerUsername = "";
+			iconIndex = -1;
+			icon.src = ""
+			$("#iconDebug").attr("src", icon.src);
+		}
+		else
+		{
+			socket.emit('iconPartnerRequest', {username:clientUsername});
+		}
 	}
 	
 	function draw(e)

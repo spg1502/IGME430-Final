@@ -2,15 +2,16 @@
 //--Create middleware folder and implement middleware
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 //	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
-//	Create a #errorMessage span on each page that will contain the error text for displaying to the user
 //	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
 //  Adjust spacing of navbar links on client app page
 //  Do CSS for the "narrow" window state
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
-//	Make the images draw in a more sensible place
 //	Use smaller images for quicker load times
+//	Create a #errorMessage span on each page that will contain the error text for displaying to the user
+//	Make the images draw in a more sensible place
+//  on 'iconPartnerDisconnected' also remove the text from the canvas
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
@@ -117,7 +118,7 @@ var server = app.listen(port, function(err)
 
 var io = socketio.listen(server);
 var iconUsers = [{name:"admin", paired:true, lastClicked:new Date('December 17, 1995 03:24:00')}];
-var sockets = [];
+var sockets = [];	//key:value array, key is usernames, value is the socket address
 var images = [];
 for(i = 0; i < 10; i++)
 {
@@ -153,6 +154,8 @@ var onMsg = function(socket)
 			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
 			{
 				var pairIcon = findUnusedIcon();
+				newUser.iconIndex = pairIcon.index;
+				user.iconIndex = pairIcon.index;
 				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name + " using the icon at index " + pairIcon.index);
 				user.paired = true;
 				newUser.paired = true;
@@ -161,6 +164,34 @@ var onMsg = function(socket)
 			}
 		});
 		iconUsers[newUser.name] = newUser;
+	});
+	
+	socket.on('iconPartnerRequestNew', function(data)
+	{
+		console.log(data.username + " wants a new partner.");
+		var defaultTime = new Date('December 17, 1995 03:24:00');
+		var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
+		if(iconUsers[newUser.name].name != "" && iconUsers[newUser.name].paired == true)
+		{
+			images[iconUsers[newUser.name].iconIndex].paired = false;
+			sockets[data.iconPartner].emit('iconPartnerDisconnected', {message: newUser.name + " Has requested a new partner, unmatching you. Feel free to hit the button to find a new partner"});
+		}
+		delete iconUsers[newUser.name];//if the user already exists, delete the old object
+		iconUsers.forEach( function(user)
+		{
+			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+			{
+				var pairIcon = findUnusedIcon();
+				newUser.iconIndex = pairIcon.index;
+				user.iconIndex = pairIcon.index;
+				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name + " using the icon at index " + pairIcon.index);
+				user.paired = true;
+				newUser.paired = true;
+				socket.emit('iconPaired', {iconPartner:user.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
+				sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
+			}
+		});
+		iconUsers[newUser.name] = newUser;	
 	});
 	
 	socket.on('iconClicked', function(data)
@@ -183,6 +214,20 @@ var onMsg = function(socket)
 	});
 };
 
+var onDisconnect = function(socket)
+{
+	socket.on('disconnect', function(data)
+	{
+		console.log(socket.iconUsername + " has left the application ");
+		/*
+		if(iconUsers[data.username].paired == true)
+		{
+			images[iconUsers[data.username].iconIndex].paired = false;
+			sockets[data.username].emit('iconPartnerDisconnected', {message: data.username + " Has disconnected, unmatching you. Feel free to hit the button to find a new partner"});
+		}*/
+	});
+};
+
 var findUnusedIcon = function()
 {
 	for(i = 0; i < images.length; i++)
@@ -199,4 +244,5 @@ io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
 	onJoined(socket);
 	onMsg(socket);
+	onDisconnect(socket);
 });

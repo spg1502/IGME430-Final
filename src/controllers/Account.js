@@ -75,7 +75,7 @@ var signup = function(req, res)
 			if(err)
 			{
 				console.log(err);
-				return res.status(400).json({error:"An error occured"});
+				return res.status(400).json({error:"An error occured, username may already be taken"});
 			}
 			req.session.account = newAccount.toAPI();
 			console.log("Successful signup for: " + accountData.username);
