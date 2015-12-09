@@ -218,22 +218,6 @@ var onMsg = function(socket)
 	});
 };
 
-var onDisconnect = function(socket)
-{
-	socket.on('disconnect', function(data)
-	{
-		console.log(socket.iconUsername + " has left the application ");
-		/*
-		if(iconUsers[socket.iconUsername].paired == true)
-		{
-			console.log("user was paired, making their icon available again");
-			//images[iconUsers[data.username].iconIndex].paired = false;
-			//sockets[data.username].emit('iconPartnerDisconnected', {message: data.username + " Has disconnected, unmatching you. Feel free to hit the button to find a new partner"});
-		}*/
-		//sockets[socket.iconUsername] = "";
-	});
-};
-
 var findUnusedIcon = function()
 {
 	for(i = 0; i < images.length; i++)
@@ -262,7 +246,6 @@ io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
 	onJoined(socket);
 	onMsg(socket);
-	onDisconnect(socket);
 });
 
 module.exports.disconnectUser = disconnectUser;
