@@ -11,7 +11,11 @@
 //	Use smaller images for quicker load times
 //	Create a #errorMessage span on each page that will contain the error text for displaying to the user
 //	Make the images draw in a more sensible place
+//  Depricate the canvas
+//  Account destroy cant login with destroyed account
 //  on 'iconPartnerDisconnected' also remove the text from the canvas
+//  Free up icons when the application is closed, match with someone then close out without finding your match and that icon gets locked out
+//  Before logout and accountDestroy, need to go through logout process of removing user from iconUsers array, sockets array and free up their icon if they're paired
 
 //	For each of these event listeners have them go make a call to router (since we already have access to it here)
 
@@ -220,11 +224,13 @@ var onDisconnect = function(socket)
 	{
 		console.log(socket.iconUsername + " has left the application ");
 		/*
-		if(iconUsers[data.username].paired == true)
+		if(iconUsers[socket.iconUsername].paired == true)
 		{
-			images[iconUsers[data.username].iconIndex].paired = false;
-			sockets[data.username].emit('iconPartnerDisconnected', {message: data.username + " Has disconnected, unmatching you. Feel free to hit the button to find a new partner"});
+			console.log("user was paired, making their icon available again");
+			//images[iconUsers[data.username].iconIndex].paired = false;
+			//sockets[data.username].emit('iconPartnerDisconnected', {message: data.username + " Has disconnected, unmatching you. Feel free to hit the button to find a new partner"});
 		}*/
+		//sockets[socket.iconUsername] = "";
 	});
 };
 
@@ -240,9 +246,23 @@ var findUnusedIcon = function()
 	}
 }
 
+var disconnectUser = function(username)
+{
+	sockets.forEach(function (element, index)
+	{
+		if( element.iconUsername == username )
+		{
+			console.log("disconnecting user " + username);
+			//Add disconnect code for unpairing users etc.
+		}
+	});
+};
+
 io.sockets.on('connection', function(socket) {
 	//All the functions defind above that we want to attach to event handlers
 	onJoined(socket);
 	onMsg(socket);
 	onDisconnect(socket);
 });
+
+module.exports.disconnectUser = disconnectUser;
