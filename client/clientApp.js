@@ -71,6 +71,7 @@ $(document).ready(function() {
 			iconPartnerUsername = data.iconPartner;
 			iconIndex = data.iconIndex;
 			icon.src = data.icon;
+			iconRegion.style.visibility = "visible";
 			$("#iconDebug").attr("src", icon.src);
 			console.log("Icon - matching this user (" + clientUsername + ") with " + iconPartnerUsername);
 			console.log(icon.src);
@@ -92,6 +93,7 @@ $(document).ready(function() {
 			iconPartnerUsername = "";
 			iconIndex = -1;
 			console.log(data.message);
+			iconRegion.style.visibility = "hidden";
 			icon.src = ""
 			$("#iconDebug").attr("src", icon.src);
 			messageText.innerText = "Your partner has disconnected, hit the button for a new partner";
@@ -119,6 +121,7 @@ $(document).ready(function() {
 			socket.emit('iconPartnerRequestNew', {username:clientUsername, iconPartner: iconPartnerUsername});
 			iconPartnerUsername = "";
 			iconIndex = -1;
+			iconRegion.style.visibility = "hidden";
 			icon.src = ""
 			$("#iconDebug").attr("src", icon.src);
 		}
