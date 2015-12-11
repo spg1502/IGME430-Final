@@ -4,16 +4,15 @@ block append style
     link(rel="stylesheet", media="screen and (min-width: 701px)", type="text/css", href="/assets/wide.css")
 block body
   nav
-    a(href="/login")
     .navlink
       a(href="/logout") Log out
       a(href="/accountDestroy") Destroy Account
   section#messageSection
-    div.messageDiv
+    div#messageDiv
       h3#messageText Hello, this is the message box
       input(type="hidden", id="loginName", value="#{username}")
       img#iconDebug
-  section#iconCanvas
+  section#findNewPartnerButton
     button(id="findNew") Find a new partner
 block scripts
         script(src="/socket.io/socket.io.js")

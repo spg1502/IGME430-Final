@@ -8,9 +8,7 @@
 //	When a user disconnects, destroy their socket and iconUser entries
 //	Use smaller images for quicker load times
 //--More friendly error messages
-//--When the image's src is set to "", have it draw a default image ("click to find a new partner"?)
 //  Account destroy cant login with destroyed account
-//  on 'iconPartnerDisconnected' also remove the text from the canvas
 //  Free up icons when the application is closed, match with someone then close out without finding your match and that icon gets locked out
 //  Before logout and accountDestroy, need to go through logout process of removing user from iconUsers array, sockets array and free up their icon if they're paired
 
