@@ -4,7 +4,9 @@ var canvas;
 var findNewPartnerButton;
 var draws = {};//Will contain objects that look like {image: imageData} to be drawn in the canvas
 var clientUsername = "new"; //Set this to the user's username
+var messageText;
 var iconPartnerUsername = "";
+var iconRegion;
 var iconIndex;
 var icon = new Image;
 var socket;
@@ -39,15 +41,14 @@ $(document).ready(function() {
 	
 	function init()
 	{
-		console.log("init");
-		canvas = document.querySelector("#mainCanvas");
-		ctx = canvas.getContext("2d");
-		ctx.font = "10px Arial";
-		canvas.addEventListener('click', onClick);
 		findNewPartnerButton = document.querySelector("#findNew");
-		findNewPartnerButton.addEventListener('click', newPartnerRequest);
+		findNewPartnerButton.addEventListener('click', newPartnerRequest)
+		
+		iconRegion = document.querySelector("#iconDebug");
+		iconRegion.addEventListener('click', onClick);
+		
 		clientUsername = document.querySelector("#loginName").value;
-		console.log(clientUsername);
+		messageText = document.querySelector("#messageText");
 		
 		socket = io.connect();
 		socket.on('connect', function()
@@ -77,7 +78,7 @@ $(document).ready(function() {
 		
 		socket.on('iconPartnerFound', function()
 		{
-			canvasWriteText("Hit the button for a new partner");
+			messageText.innerText = "Hit the button for a new partner";
 		});
 		
 		socket.on('setIconPartnerUsername', function(data)
@@ -93,6 +94,7 @@ $(document).ready(function() {
 			console.log(data.message);
 			icon.src = ""
 			$("#iconDebug").attr("src", icon.src);
+			messageText.innerText = "Your partner has disconnected, hit the button for a new partner";
 		});
 	}
 	//Make events here for all the interactive buttons on the client's app
@@ -110,7 +112,7 @@ $(document).ready(function() {
 	
 	function newPartnerRequest (e)
 	{
-		canvasWriteText("Waiting for Partner");
+		messageText.innerText = "Waiting for Partner";
 		
 		if(iconPartnerUsername != "")
 		{
@@ -124,19 +126,6 @@ $(document).ready(function() {
 		{
 			socket.emit('iconPartnerRequest', {username:clientUsername});
 		}
-	}
-	
-	function draw(e)
-	{
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.globalCompositeOperation = "source-over";
-		ctx.drawImage(e, 0,0);
-	}
-	
-	function canvasWriteText(e)
-	{
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillText(e, 5, 25);
 	}
 	window.onload = init;
 });
