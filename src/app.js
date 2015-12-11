@@ -2,8 +2,6 @@
 //--Create middleware folder and implement middleware
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
 // 	Add ClientAppModel that will have a findByOwner function
-//  Adjust spacing of navbar links on client app page
-//--Remove conditional CSS, make it look consistent
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
 //	Use smaller images for quicker load times
