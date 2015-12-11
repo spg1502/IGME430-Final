@@ -1,17 +1,15 @@
 //TODO:
 //--Create middleware folder and implement middleware
 //	Add to Account model, give each user object the data they need, teams, icons, etc.
-//	Create an Event model with an event owner, created date, event name that can only be edited by event owner, eventually add space for information like bathroom locations and stuff
-//	Handle POST requests on the clientApp page in router. app.post("/clientApp",	controllers.APPCONTROLLER.handlePosts);
 // 	Add ClientAppModel that will have a findByOwner function
 //  Adjust spacing of navbar links on client app page
-//  Do CSS for the "narrow" window state
+//--Remove conditional CSS, make it look consistent
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
 //	Use smaller images for quicker load times
-//	Create a #errorMessage span on each page that will contain the error text for displaying to the user
-//	Make the images draw in a more sensible place
-//  Depricate the canvas
+//--More friendly error messages
+//--When the image's src is set to "", have it draw a default image ("click to find a new partner"?)
+//--Depricate the canvas
 //  Account destroy cant login with destroyed account
 //  on 'iconPartnerDisconnected' also remove the text from the canvas
 //  Free up icons when the application is closed, match with someone then close out without finding your match and that icon gets locked out
