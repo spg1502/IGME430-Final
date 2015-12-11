@@ -175,7 +175,7 @@ var onMsg = function(socket)
 		console.log(data.username + " wants a new partner.");
 		var defaultTime = new Date('December 17, 1995 03:24:00');
 		var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
-		if(iconUsers[newUser.name].name != "" && iconUsers[newUser.name].paired == true)
+		if(iconUsers[newUser.name].name !== "" && iconUsers[newUser.name].paired === true)
 		{
 			images[iconUsers[newUser.name].iconIndex].paired = false;
 			sockets[data.iconPartner].emit('iconPartnerDisconnected', {message: newUser.name + " Has requested a new partner, unmatching you. Feel free to hit the button to find a new partner"});
@@ -222,13 +222,13 @@ var findUnusedIcon = function()
 {
 	for(i = 0; i < images.length; i++)
 	{
-		if(images[i].paired == false)
+		if(images[i].paired === false)
 		{
 			images[i].paired = true;
 			return {imageUrl:images[i].imageUrl, index:images[i].index};
 		}
 	}
-}
+};
 
 var disconnectUser = function(username)
 {
