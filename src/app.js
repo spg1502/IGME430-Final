@@ -1,12 +1,9 @@
 //TODO:
 //--Create middleware folder and implement middleware
-//	Add to Account model, give each user object the data they need, teams, icons, etc.
-// 	Add ClientAppModel that will have a findByOwner function
 //  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
 //	When a user disconnects, destroy their socket and iconUser entries
 //	Use smaller images for quicker load times
 //--More friendly error messages
-//  Account destroy cant login with destroyed account
 //  Free up icons when the application is closed, match with someone then close out without finding your match and that icon gets locked out
 //  Before logout and accountDestroy, need to go through logout process of removing user from iconUsers array, sockets array and free up their icon if they're paired
 
