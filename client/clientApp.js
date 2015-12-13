@@ -100,9 +100,6 @@ $(document).ready(function() {
 			messageText.innerText = "Your partner has disconnected, hit the button for a new partner";
 		});
 	}
-	//Make events here for all the interactive buttons on the client's app
-	//Also add all the socket.on events here to respond to all the client/server communications
-	
 		
 	function onClick (e)
 	{
@@ -119,9 +116,7 @@ $(document).ready(function() {
 		
 		if(iconPartnerUsername != "")
 		{
-			socket.emit('iconPartnerRequestNew', {username:clientUsername, iconPartner: iconPartnerUsername});
-			iconPartnerUsername = "";
-			iconIndex = -1;
+			logout();
 			iconRegion.style.visibility = "hidden";
 			icon.src = ""
 			$("#iconDebug").attr("src", icon.src);
@@ -133,3 +128,10 @@ $(document).ready(function() {
 	}
 	window.onload = init;
 });
+
+var logout = function()
+{
+	socket.emit('iconPartnerRequestNew', {username:clientUsername, iconPartner: iconPartnerUsername});
+	iconPartnerUsername = "";
+	iconIndex = -1;
+};

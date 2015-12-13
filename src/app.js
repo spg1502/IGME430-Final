@@ -236,6 +236,7 @@ var disconnectUser = function(username)
 		if( element.iconUsername == username )
 		{
 			console.log("disconnecting user " + username);
+			images[iconUsers[username].iconIndex].paired = false;
 			//Add disconnect code for unpairing users etc.
 		}
 	});
