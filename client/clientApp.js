@@ -72,6 +72,7 @@ $(document).ready(function() {
 			iconIndex = data.iconIndex;
 			icon.src = data.icon;
 			iconRegion.style.visibility = "visible";
+			messageText.innerText = "You've found a match! Go find the person with an icon like the one below";
 			$("#iconDebug").attr("src", icon.src);
 			console.log("Icon - matching this user (" + clientUsername + ") with " + iconPartnerUsername);
 			console.log(icon.src);

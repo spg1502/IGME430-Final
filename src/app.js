@@ -146,20 +146,28 @@ var onMsg = function(socket)
 		var defaultTime = new Date('December 17, 1995 03:24:00');
 		var newUser = {name: data.username, paired:false, lastClicked:defaultTime};
 		delete iconUsers[newUser.name];//if the user already exists, delete the old object
-		iconUsers.forEach( function(user)
-		{
-			if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+		var BreakException = {};
+		try {
+			iconUsers.forEach( function(user)
 			{
-				var pairIcon = findUnusedIcon();
-				newUser.iconIndex = pairIcon.index;
-				user.iconIndex = pairIcon.index;
-				console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name + " using the icon at index " + pairIcon.index);
-				user.paired = true;
-				newUser.paired = true;
-				socket.emit('iconPaired', {iconPartner:user.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
-				sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
-			}
-		});
+				if(user.paired ===false)	//if an unpaired user is found, pair it up with the new user
+				{
+					var pairIcon = findUnusedIcon();
+					newUser.iconIndex = pairIcon.index;
+					user.iconIndex = pairIcon.index;
+					console.log("Pairing requester: " + newUser.name + " with found unpaired user: " + user.name + " using the icon at index " + pairIcon.index);
+					user.paired = true;
+					newUser.paired = true;
+					socket.emit('iconPaired', {iconPartner:user.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
+					sockets[user.name].emit('iconPaired', {iconPartner:newUser.name, icon:pairIcon.imageUrl, iconIndex:pairIcon.index});
+					//Break out here
+					throw BreakException;
+				}
+			});
+		} catch(e)
+		{
+			if ( e!== BreakException) throw e;
+		}
 		iconUsers[newUser.name] = newUser;
 	});
 	
@@ -199,6 +207,8 @@ var onMsg = function(socket)
 		if( Math.abs(iconUsers[data.iconPartner].lastClicked - iconUsers[data.username].lastClicked) < 5000 )
 		{
 			console.log("click time between " + data.username + " and " + data.iconPartner + " is < 5000");
+			iconUsers[data.iconPartner].lastClicked = (new Date().getTime() - new Date(2014, Math.random() * 11, Math.random() * 28));
+			iconUsers[data.username].lastClicked = (new Date().getTime() - new Date(2014, Math.random() * 11, Math.random() * 28));
 			iconUsers[data.username].paired = false;
 			socket.emit('setIconPartnerUsername', {newIconPartnerUsername:""});
 			iconUsers[data.iconPartner].paired = false;
