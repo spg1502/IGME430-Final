@@ -1,18 +1,3 @@
-//TODO:
-//--Create middleware folder and implement middleware
-//  Store the iconUsers and sockets arrays on the mongo server, not just as variables as a part of the server session
-//	When a user disconnects, destroy their socket and iconUser entries
-//	Use smaller images for quicker load times
-//--More friendly error messages
-//  Free up icons when the application is closed, match with someone then close out without finding your match and that icon gets locked out
-//  Before logout and accountDestroy, need to go through logout process of removing user from iconUsers array, sockets array and free up their icon if they're paired
-
-//	For each of these event listeners have them go make a call to router (since we already have access to it here)
-
-//Router will then have get/posts for each one of the actions the server can take with websockets stuff and will call functions in a DIFFERENT app controller
-
-//Create an app controller that has the iconClicked, iconPartnerRequest functions, and rather than have them implemented as anonymous functions, make them their own functions that the app controller can use 
-
 //import libraries
 var path = require('path');
 var express = require('express');
