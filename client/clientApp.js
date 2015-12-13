@@ -79,7 +79,7 @@ $(document).ready(function() {
 		
 		socket.on('iconPartnerFound', function()
 		{
-			messageText.innerText = "Hit the button for a new partner";
+			messageText.innerText = "Congratulations on finding one another! Hit the button for a new partner";
 		});
 		
 		socket.on('setIconPartnerUsername', function(data)

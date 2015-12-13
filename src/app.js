@@ -203,8 +203,7 @@ var onMsg = function(socket)
 			socket.emit('setIconPartnerUsername', {newIconPartnerUsername:""});
 			iconUsers[data.iconPartner].paired = false;
 			sockets[data.iconPartner].emit('setIconPartnerUsername', {newIconPartnerUsername:""});
-			//Return the shared icon to the pool of icons
-			//Emit iconPartnerFound
+			images[iconUsers[data.username].iconIndex].paired = false;
 			socket.emit('iconPartnerFound');
 			sockets[data.iconPartner].emit('iconPartnerFound');
 		}
