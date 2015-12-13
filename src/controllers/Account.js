@@ -2,7 +2,6 @@ var models = require('../models');
 
 var Account = models.Account;
 var app = require('../app.js');
-//var clientApp = require('../../client/clientApp.js');
 
 var loginPage = function(req, res)
 {
@@ -16,7 +15,6 @@ var signupPage = function(req, res)
 
 var logout = function(req, res)
 {
-	//clientApp.logout();
 	app.disconnectUser(req.session.account.username);
 	//Before this, need to remove user from Sockets array, iconUsers array, and free up their icon if they're paired
 	console.log("Successful logout for user " + req.session.account.username);
@@ -26,7 +24,6 @@ var logout = function(req, res)
 
 var accountDestroy = function(req, res)
 {
-	//clientApp.logout();
 	app.disconnectUser(req.session.account.username);
 	//Before this, need to remove user from Sockets array, iconUsers array, and free up their icon if they're paired
 	console.log("Successful account destroy for user " + req.session.account.username);
